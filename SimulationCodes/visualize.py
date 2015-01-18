@@ -1,4 +1,3 @@
-import Image
 import numpy as np
 from images2gif import writeGif
 from PIL import Image
@@ -32,7 +31,7 @@ def make_gif():
     data = np.zeros( (plotsize,plotsize,3), dtype=np.uint8)
     file = open('coordinates_output','r')
     counter=0    
-    print "starting visualization"
+    print( "starting visualization")
     for line in file.readlines():
         data = np.zeros( (plotsize,plotsize,3), dtype=np.uint8)
         array=line.split();

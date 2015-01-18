@@ -2,10 +2,10 @@
 import random
 
 G = 0.0001 #gravity constant
-n = 20 #number of stars
+n = 200 #number of stars
 #dt = 0.0005 #timestep (.0005 seems like max for G=.002 and m=1)
 pt = 0.005 #print_timestep
-t_final = 4 #final time
+t_final = 2 #final time
 m = 1 #mass of each star
 v0 = 0.8 #average initial speed
 min_distance = 0.00001 #stars closer than this distance have force as if they are this distance apart
@@ -15,7 +15,7 @@ dt0 = 0.001 #initial dt, in case we don't want flexible dt
 
 #initialize each star at a random point on a 2D grid
 
-print "initializing"
+print( "initializing")
 coordinates=[]
 velocity=[]
 mass=[]
@@ -133,7 +133,7 @@ def collide(coordinates,velocity):
         i+=1
     return coordinates, velocity
 
-print "starting simulation"
+print( "starting simulation")
 t=0
 latest_printed=0;
 force = calculate_force(coordinates, G, m)
@@ -148,11 +148,11 @@ while t < t_final:
         coordinates_string = gather_report_for_printing(coordinates)
         file.write(coordinates_string)
         current_frame+=1
-        print str(current_frame)+"/"+str(total_number_of_frames)+" complete"
+        print (str(current_frame)+"/"+str(total_number_of_frames)+" complete")
         latest_printed+=pt
     
 file.close()
-print 'finished with simulation'
+print ('finished with simulation')
 
 from visualize import make_gif
 make_gif()

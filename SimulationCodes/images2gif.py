@@ -73,6 +73,17 @@ def getGraphicsControlExt(duration=0.1):
     bb += '\x00'  # end
     return bb
 
+try:
+    import PIL
+    from PIL import Image
+    pillow = True
+    try:
+        from PIL import PILLOW_VERSION  # test if user has Pillow or PIL
+    except ImportError:
+        pillow = False
+    from PIL.GifImagePlugin import getheader, getdata
+except ImportError:
+    PIL = None
 
 def _writeGifToFile(fp, images, durations, loops):
     """ Given a set of images writes the bytes to the specified stream.
@@ -88,7 +99,13 @@ def _writeGifToFile(fp, images, durations, loops):
             # first image
             
             # gather data
-            palette = getheader(im)[1]
+            if not pillow:
+                palette = getheader(im)[1]
+            else:
+                palette = getheader(im)[0][-1]
+                if not palette:
+                    palette = im.palette.tobytes()
+
             data = getdata(im)
             imdes, data = data[0], data[1:]            
             header = getheaderAnim(im)
