@@ -1,0 +1,29 @@
+G = 0.001 #gravity constant
+n = 100 #number of stars
+pt = 0.005 #print_timestep
+t_final = 2 #final time
+m = 1 #mass of each star
+v0 = 0.8 #average initial speed
+min_distance = 0.00001 #stars closer than this distance have force as if they are this distance apart
+collision_distance = 0.00001 #stars closer than this collide to form one object
+dt = 0.001 #time step increment
+
+#--------------------------------------
+#package an input dictionary
+
+simulation_input={}
+
+simulation_input['G'] = G
+simulation_input['n'] = n
+simulation_input['pt'] = pt
+simulation_input['t_final'] = t_final
+simulation_input['m'] = m
+simulation_input['v0'] = v0
+simulation_input['min_distance'] = min_distance
+simulation_input['collision_distance'] = collision_distance
+simulation_input['dt'] = dt
+
+
+#--------------------------------------
+import gsim
+gsim.main(simulation_input)
