@@ -3,17 +3,17 @@ import random
 
 G = 0.0001 #gravity constant
 n = 200 #number of stars
-#dt = 0.0005 #timestep (.0005 seems like max for G=.002 and m=1)
 pt = 0.005 #print_timestep
 t_final = 2 #final time
 m = 1 #mass of each star
 v0 = 0.8 #average initial speed
 min_distance = 0.00001 #stars closer than this distance have force as if they are this distance apart
 collision_distance = 0.00001 #stars closer than this collide to form one object
-accuracy_parameter=10 # 5-10 recommended
-dt0 = 0.001 #initial dt, in case we don't want flexible dt
+dt = 0.001 #time step increment
 
-#initialize each star at a random point on a 2D grid
+
+
+# initialize each star at a random point on a 2D grid
 
 print( "initializing")
 coordinates=[]
@@ -45,8 +45,6 @@ while i < n:
     velocity[i][1]-=vy_average
     i+=1
 
-dt=dt0
-factor = (1/G/m)**0.5/accuracy_parameter
 def calculate_force(coordinates, G, m):
     force=[]
     closest_distance_squared=(coordinates[0][0]-coordinates[1][0])**2+(coordinates[1][0]-coordinates[1][1])**2
@@ -78,7 +76,7 @@ def calculate_force(coordinates, G, m):
         i+=1
     #global dt
     #closest_distance_squared=max(closest_distance_squared,min_distance_squared)
-    #dt = (closest_distance_squared**0.75)*factor
+    #dt = (closest_distance_squared**0.75)
     #if dt > pt:
     #    dt = pt/2;
     return force
