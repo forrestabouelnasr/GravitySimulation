@@ -1,8 +1,15 @@
 galaxy simulator to do:
 
-set up very simple server: just display current gif/movie
-extend simulation code to 3D
-add "restart" function
-extend visualizer for non-GIF filetype
-write visualizer for 3D-to-2D (see http://en.wikipedia.org/wiki/3D_projection )
-develop server to accept simulation parameters and run that simulation
+server/meta:
+	set up software: "easy to install"
+	implement logins/users
+	set up workflow: 
+		server accepts simulation inputs from users, writes to DB
+		processors run the simulation jobs
+		server publishes the results and notifies users
+simulation code:
+	extend simulation code to 3D
+	add "restart" function
+visualization/postprocessing:
+	extend visualizer for non-GIF filetype (so the whole file doesn't have to fit in memory)
+	modify visualizer for 3D-to-2D projection (see http://en.wikipedia.org/wiki/3D_projection )
