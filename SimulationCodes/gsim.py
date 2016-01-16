@@ -12,7 +12,7 @@ def main(simulation_input):
     
     
     
-    # initialize each star at a random point on a 2D grid
+    # initialize each star at a random point on a 2D grid, with random 2D velocity
     import random
     print( "initializing")
     coordinates=[]
@@ -22,15 +22,17 @@ def main(simulation_input):
     v0=v0*(2**0.5)
     vx_total=0
     vy_total=0
+    vz_total=0
     i=0
     min_distance_squared = min_distance ** 2
     total_number_of_frames=t_final/pt
     current_frame=0
     while i < n:
-        coordinates.append([random.random(), random.random()])
-        velocity.append([v0*(random.random()-0.5), v0*(random.random()-0.5)])
+        coordinates.append([random.random(), random.random(), random.random()])
+        velocity.append([v0*(random.random()-0.5), v0*(random.random()-0.5), v0*(random.random()-0.5)])
         vx_total+=velocity[i][0]
         vy_total+=velocity[i][1]
+        vz_total+=velocity[i][2]
         i+=1
         mass.append(m);
         display.append(1);
@@ -38,18 +40,20 @@ def main(simulation_input):
     #enforce net zero momentum
     vx_average=vx_total/n
     vy_average=vy_total/n
+    vz_average=vz_total/n
     i=0
     while i < n:
         velocity[i][0]-=vx_average
         velocity[i][1]-=vy_average
+        velocity[i][2]-=vz_average
         i+=1
     
     def calculate_force(coordinates, G, m):
         force=[]
-        closest_distance_squared=(coordinates[0][0]-coordinates[1][0])**2+(coordinates[1][0]-coordinates[1][1])**2
+        closest_distance_squared=(coordinates[0][0]-coordinates[1][0])**2+(coordinates[1][0]-coordinates[1][1])**2+(coordinates[2][0]-coordinates[2][1])**2
         i=0
         while i < n:
-            force.append([0,0])
+            force.append([0,0,0])
             i+=1
         i=0
         while i < n-1:
@@ -59,7 +63,8 @@ def main(simulation_input):
                     if mass[j]>0:
                         x_distance=coordinates[j][0]-coordinates[i][0]
                         y_distance=coordinates[j][1]-coordinates[i][1]
-                        distance_squared=x_distance**2 + y_distance**2
+                        z_distance=coordinates[j][2]-coordinates[i][2]
+                        distance_squared=x_distance**2 + y_distance**2 + z_distance**2
                         if closest_distance_squared > distance_squared:
                             closest_distance_squared = distance_squared
                         distance_squared = max(distance_squared, min_distance_squared)
@@ -67,10 +72,13 @@ def main(simulation_input):
                         total_force= G * mass[i] * mass[j] / distance_squared
                         x_force = total_force * x_distance / distance
                         y_force = total_force * y_distance / distance
+                        z_force = total_force * z_distance / distance
                         force[i][0] += x_force
                         force[i][1] += y_force
+                        force[i][2] += z_force
                         force[j][0] -= x_force
                         force[j][1] -= y_force
+                        force[j][2] -= z_force
                     j+=1
             i+=1
         #global dt
@@ -86,14 +94,17 @@ def main(simulation_input):
             if mass[i]>0:
                 velocity[i][0]+=force[i][0]*dt/mass[i]
                 velocity[i][1]+=force[i][1]*dt/mass[i]
+                velocity[i][2]+=force[i][2]*dt/mass[i]
             i+=1
         return velocity
     
-    def update_coordinates(force, velocity, coordinates, dt):
+    def update_coordinates(force, velocity, coordinates, dt, mass):
         i=0
         while i < n:
-            coordinates[i][0]+=velocity[i][0]*dt+force[i][0]*dt*dt/m/2;
-            coordinates[i][1]+=velocity[i][1]*dt+force[i][0]*dt*dt/m/2;
+            if mass[i] > 0:
+                coordinates[i][0]+=velocity[i][0]*dt+force[i][0]*dt*dt/mass[i]/2
+                coordinates[i][1]+=velocity[i][1]*dt+force[i][1]*dt*dt/mass[i]/2
+                coordinates[i][2]+=velocity[i][2]*dt+force[i][2]*dt*dt/mass[i]/2
             i+=1
         return coordinates
     
@@ -102,7 +113,7 @@ def main(simulation_input):
         i=0
         while i < n:
             if display[i]==1:
-                string=string+str(float(mass[i])**(1.0/3.0))+' '+str(coordinates[i][0])+' '+str(coordinates[i][1])+' '
+                string=string+str(float(mass[i])**(1.0/3.0))+' '+str(coordinates[i][0])+' '+str(coordinates[i][1])+' '+str(coordinates[i][2])+' '
             i+=1
         string=string+'\n'
         return string
@@ -115,16 +126,20 @@ def main(simulation_input):
                 if mass[i]*mass[j]>0:
                     x_distance=coordinates[j][0]-coordinates[i][0]
                     y_distance=coordinates[j][1]-coordinates[i][1]
-                    distance_squared=x_distance**2 + y_distance**2
+                    z_distance=coordinates[j][2]-coordinates[i][2]
+                    distance_squared=x_distance**2 + y_distance**2 + z_distance**2
                     if distance_squared < collision_distance:
                         velocity[i][0]=(velocity[i][0]*mass[i]+velocity[j][0]*mass[j])/(mass[i]+mass[j])
                         velocity[i][1]=(velocity[i][1]*mass[i]+velocity[j][1]*mass[j])/(mass[i]+mass[j])
+                        velocity[i][2]=(velocity[i][2]*mass[i]+velocity[j][2]*mass[j])/(mass[i]+mass[j])
                         coordinates[i][0]=(coordinates[i][0]*mass[i]+coordinates[j][0]*mass[j])/(mass[i]+mass[j])
                         coordinates[i][1]=(coordinates[i][1]*mass[i]+coordinates[j][1]*mass[j])/(mass[i]+mass[j])
+                        coordinates[i][2]=(coordinates[i][2]*mass[i]+coordinates[j][2]*mass[j])/(mass[i]+mass[j])
                         mass[i]=mass[i]+mass[j]
                         mass[j]=0
                         velocity[j][0]=0;
                         velocity[j][1]=0;
+                        velocity[j][2]=0;
                         display[j]=0;
                 j+=1
             i+=1
@@ -138,7 +153,7 @@ def main(simulation_input):
     while t < t_final:
         force = calculate_force(coordinates, G, m)
         velocity = update_velocity(force, velocity, dt)
-        coordinates = update_coordinates(force, velocity, coordinates, dt)
+        coordinates = update_coordinates(force, velocity, coordinates, dt, mass)
         coordinates,velocity = collide(coordinates,velocity)
         t+=dt
         while t-latest_printed>=pt:
@@ -151,6 +166,6 @@ def main(simulation_input):
     file.close()
     print ('finished with simulation')
     
-    from visualize import make_gif
+    from visualize_3D import make_gif
     make_gif()
 

@@ -24,7 +24,7 @@ def draw_circle(center,r,data):
     return data
 
 def make_gif():
-    radius=1
+    radius=3
     image_filenames=[]
     image_list=[]
     plotsize=800
@@ -34,14 +34,14 @@ def make_gif():
     print( "starting visualization")
     for line in file.readlines():
         data = np.zeros( (plotsize,plotsize,3), dtype=np.uint8)
-        array=line.split();
+        array=line.split(' ');
         coordinates=[]
         r=[]
         i=0
-        while i < len(array):
+        while i < len(array)-1:
             r.append(float(array[i]))
-            coordinates.append( [ float(array[i+1]), float(array[i+2]) ])
-            i+=3
+            coordinates.append( [ float(array[i+1]), float(array[i+2]), float(array[i+3]) ] )
+            i+=4
         n=len(coordinates)
         i=0
         while i < n:
