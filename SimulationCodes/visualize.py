@@ -48,16 +48,20 @@ def make_gif():
             center = coordinates[i]
             data = draw_circle([center[0]*plotsize,center[1]*plotsize],r[i]*radius,data)
             i+=1
-        #img = Image.fromarray(data, 'RGB')
-        image_list.append(Image.fromarray(data, 'RGB'))
-        #image_filenames.append('image'+str(counter)+'.png')
-        #img.save('image'+str(counter)+'.png')
+        img = Image.fromarray(data, 'RGB')
+        #image_list.append(Image.fromarray(data, 'RGB'))
+        filename = 'image'+'0'*(8-len(str(counter)))+str(counter)+'.png'
+        image_filenames.append(filename)
+        img.save(filename)
         counter+=1
     file.close()
     
 
-    writeGif('galaxy.gif', image_list, duration=0.05)
+    #writeGif('galaxy.gif', image_list, duration=0.05)
+    os.remove('out.mp4')
+    os.system("./ffmpeg -framerate 20 -pattern_type glob -i '*.png' -c:v libx264 -pix_fmt yuv420p out.mp4")
     for fn in image_filenames:
         os.remove(fn)
+        pass
 
 

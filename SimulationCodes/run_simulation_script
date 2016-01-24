@@ -1,7 +1,7 @@
-G = 0.01 #gravity constant
-n = 1000 #number of stars
-pt = 0.0005 #print_timestep
-t_final = 2.0 #final time
+G = 0.1 #gravity constant
+n = 60 #number of stars
+pt = 0.001 #print_timestep
+t_final = 1.0 #final time
 m = 1 #mass of each star
 v0 = 2.5 #average initial speed
 min_distance = 0.00000005 #stars closer than this distance have force as if they are this distance apart
@@ -27,5 +27,5 @@ simulation_input['dt'] = dt
 
 
 #--------------------------------------
-import gsim_3D
-gsim_3D.main(simulation_input)
+import gsim
+gsim.main(simulation_input)

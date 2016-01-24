@@ -166,6 +166,6 @@ def main(simulation_input):
     file.close()
     print ('finished with simulation')
     
-    from visualize_3D import make_gif
+    from visualize import make_gif
     make_gif()
 
