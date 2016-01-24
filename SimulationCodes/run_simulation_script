@@ -1,9 +1,9 @@
-G = 0.1 #gravity constant
+G = 0.08 #gravity constant
 n = 60 #number of stars
 pt = 0.001 #print_timestep
-t_final = 1.0 #final time
+t_final = 2.0 #final time
 m = 1 #mass of each star
-v0 = 2.5 #average initial speed
+v0 = 1.5 #average initial speed
 min_distance = 0.00000005 #stars closer than this distance have force as if they are this distance apart
 collision_distance = 0.000005 #stars closer than this collide to form one object
 dt = 0.00005 #time step increment (0.000001 is good)
